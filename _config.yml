@@ -1,3 +1,12 @@
+title: "trp27 | Developer & Utility Tools"
+description: "High-performance utilities, local engines, and printable generators"
 theme: jekyll-theme-minimal
-title: trp27's homepage
-description: Interesting updates coming soon
+
+# Exclude standalone HTML utility tools from Jekyll layout injection
+defaults:
+  - scope:
+      path: "tools"
+      types:
+        - "html"
+    values:
+      layout: null
