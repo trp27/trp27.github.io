@@ -742,6 +742,16 @@ layout: null
     // --- Utility Helper Functions ---
     const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
+    // Fisher-Yates array shuffle for non-repeating problem sequence
+    const shuffleArray = (array) => {
+      const copy = [...array];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    };
+
     // Toggle Drawer Visibility
     function toggleDrawer() {
       const body = document.getElementById('drawer-body');
@@ -750,28 +760,43 @@ layout: null
       btn.innerHTML = isCollapsed ? '<span>⚙️ Show Controls</span>' : '<span>⚙️ Hide Controls</span>';
     }
 
-    // Story Context Templates by Operation
+    // Story Context Templates by Operation (Expanded Pools for Zero Repetition)
     const contextTemplates = {
       mult: [
-        (a, b) => ({ stem: `A bakery arranges fresh fruit pies into <strong>${a}</strong> display shelves. Each shelf holds <strong>${b}</strong> pies. How many pies are on display?`, eq: `${a} × ${b} =`, unit: "pies", ans: a * b }),
+        (a, b) => ({ stem: `A bakery arranges fresh fruit pies onto <strong>${a}</strong> display shelves. Each shelf holds <strong>${b}</strong> pies. How many pies are on display?`, eq: `${a} × ${b} =`, unit: "pies", ans: a * b }),
         (a, b) => ({ stem: `An apple orchard has <strong>${a}</strong> neat rows of trees. The farm workers plant <strong>${b}</strong> trees in each row. How many apple trees are there?`, eq: `${a} × ${b} =`, unit: "trees", ans: a * b }),
         (a, b) => ({ stem: `Liam bought <strong>${a}</strong> boxes of colored markers for the art room. Every box contains <strong>${b}</strong> markers. Find the total marker count.`, eq: `${a} × ${b} =`, unit: "markers", ans: a * b }),
         (a, b) => ({ stem: `A science club organizes mineral specimens into <strong>${a}</strong> glass display trays. Each tray holds <strong>${b}</strong> gems. How many gems are shown?`, eq: `${a} × ${b} =`, unit: "gems", ans: a * b }),
-        (a, b) => ({ stem: `A community garden features <strong>${a}</strong> planter boxes. The gardeners sow <strong>${b}</strong> cucumber seeds in each box. How many seeds were sown?`, eq: `${a} × ${b} =`, unit: "seeds", ans: a * b })
+        (a, b) => ({ stem: `A community garden features <strong>${a}</strong> planter boxes. The gardeners sow <strong>${b}</strong> cucumber seeds in each box. How many seeds were sown?`, eq: `${a} × ${b} =`, unit: "seeds", ans: a * b }),
+        (a, b) => ({ stem: `A research team cataloged field specimens across <strong>${a}</strong> storage vaults. Each vault contains <strong>${b}</strong> amber fossils. How many fossils are stored?`, eq: `${a} × ${b} =`, unit: "fossils", ans: a * b }),
+        (a, b) => ({ stem: `An art studio arranges watercolor sets across <strong>${a}</strong> student desks. Each desk receives <strong>${b}</strong> paint palettes. How many palettes are out?`, eq: `${a} × ${b} =`, unit: "palettes", ans: a * b }),
+        (a, b) => ({ stem: `A library curator stacks rare folios into <strong>${a}</strong> protective cases. Each case secures <strong>${b}</strong> manuscripts. What is the total manuscript count?`, eq: `${a} × ${b} =`, unit: "manuscripts", ans: a * b }),
+        (a, b) => ({ stem: `A sports academy packs tennis balls into <strong>${a}</strong> training hoppers. Every hopper holds <strong>${b}</strong> tennis balls. How many balls are ready?`, eq: `${a} × ${b} =`, unit: "balls", ans: a * b }),
+        (a, b) => ({ stem: `A florist pre-arranges fresh bouquets in <strong>${a}</strong> ceramic vases. Each vase holds <strong>${b}</strong> bright sunflowers. How many sunflowers are in the vases?`, eq: `${a} × ${b} =`, unit: "sunflowers", ans: a * b })
       ],
       div: [
         (a, b) => ({ stem: `A bookstore clerk distributes <strong>${a * b}</strong> books evenly among <strong>${b}</strong> reading tables. How many books are on each table?`, eq: `${a * b} ÷ ${b} =`, unit: "books", ans: a }),
         (a, b) => ({ stem: `A sports coach divides <strong>${a * b}</strong> tennis balls equally into <strong>${b}</strong> practice hoppers. How many balls go into each hopper?`, eq: `${a * b} ÷ ${b} =`, unit: "balls", ans: a }),
         (a, b) => ({ stem: `An art teacher gives <strong>${a * b}</strong> brushes to <strong>${b}</strong> student partners to share evenly. How many brushes does each partner receive?`, eq: `${a * b} ÷ ${b} =`, unit: "brushes", ans: a }),
         (a, b) => ({ stem: `A flower farm packs <strong>${a * b}</strong> roses equally into <strong>${b}</strong> decorative bouquets. How many roses are in each bouquet?`, eq: `${a * b} ÷ ${b} =`, unit: "roses", ans: a }),
-        (a, b) => ({ stem: `A baker places <strong>${a * b}</strong> warm bagels equally into <strong>${b}</strong> woven baskets. How many bagels are in every basket?`, eq: `${a * b} ÷ ${b} =`, unit: "bagels", ans: a })
+        (a, b) => ({ stem: `A baker places <strong>${a * b}</strong> warm bagels equally into <strong>${b}</strong> woven baskets. How many bagels are in every basket?`, eq: `${a * b} ÷ ${b} =`, unit: "bagels", ans: a }),
+        (a, b) => ({ stem: `A research laboratory divides <strong>${a * b}</strong> test samples equally among <strong>${b}</strong> testing trays. How many samples sit on each tray?`, eq: `${a * b} ÷ ${b} =`, unit: "samples", ans: a }),
+        (a, b) => ({ stem: `A volunteer crew separates <strong>${a * b}</strong> seedling pots equally into <strong>${b}</strong> greenhouse wagons. How many pots go into each wagon?`, eq: `${a * b} ÷ ${b} =`, unit: "pots", ans: a }),
+        (a, b) => ({ stem: `A music instructor allots <strong>${a * b}</strong> sheet music folders equally among <strong>${b}</strong> practice stands. How many folders are on each stand?`, eq: `${a * b} ÷ ${b} =`, unit: "folders", ans: a }),
+        (a, b) => ({ stem: `A toy store distributes <strong>${a * b}</strong> model building blocks equally into <strong>${b}</strong> storage bins. How many blocks are in each bin?`, eq: `${a * b} ÷ ${b} =`, unit: "blocks", ans: a }),
+        (a, b) => ({ stem: `A farmer packs <strong>${a * b}</strong> crisp apples evenly into <strong>${b}</strong> display bushels. How many apples are in each bushel?`, eq: `${a * b} ÷ ${b} =`, unit: "apples", ans: a })
       ],
       add: [
         (a, b) => ({ stem: `Maya collected <strong>${a}</strong> river pebbles yesterday and found <strong>${b}</strong> more pebbles today. How many pebbles does she have in all?`, eq: `${a} + ${b} =`, unit: "pebbles", ans: a + b }),
         (a, b) => ({ stem: `A bird sanctuary cared for <strong>${a}</strong> bluebirds and <strong>${b}</strong> robins this season. What was the total number of birds cared for?`, eq: `${a} + ${b} =`, unit: "birds", ans: a + b }),
         (a, b) => ({ stem: `Carlos read <strong>${a}</strong> pages of his science text before lunch and <strong>${b}</strong> pages after lunch. How many pages did Carlos read?`, eq: `${a} + ${b} =`, unit: "pages", ans: a + b }),
         (a, b) => ({ stem: `A school cafeteria prepared <strong>${a}</strong> roast turkey sandwiches and <strong>${b}</strong> veggie wraps. How many lunches were ready?`, eq: `${a} + ${b} =`, unit: "lunches", ans: a + b }),
-        (a, b) => ({ stem: `The library added <strong>${a}</strong> new graphic novels and <strong>${b}</strong> audiobooks to its shelves. How many media items were added?`, eq: `${a} + ${b} =`, unit: "items", ans: a + b })
+        (a, b) => ({ stem: `The library added <strong>${a}</strong> new graphic novels and <strong>${b}</strong> audiobooks to its shelves. How many media items were added?`, eq: `${a} + ${b} =`, unit: "items", ans: a + b }),
+        (a, b) => ({ stem: `A research team cataloged <strong>${a}</strong> mineral samples on Monday and <strong>${b}</strong> samples on Tuesday. What is the total count of samples?`, eq: `${a} + ${b} =`, unit: "samples", ans: a + b }),
+        (a, b) => ({ stem: `An orchard harvested <strong>${a}</strong> bushels of red apples and <strong>${b}</strong> bushels of green pears. How many fruit bushels were picked?`, eq: `${a} + ${b} =`, unit: "bushels", ans: a + b }),
+        (a, b) => ({ stem: `A community center registered <strong>${a}</strong> runners in the morning and <strong>${b}</strong> runners in the afternoon. How many runners entered?`, eq: `${a} + ${b} =`, unit: "runners", ans: a + b }),
+        (a, b) => ({ stem: `An aquarium display features <strong>${a}</strong> neon tetras and <strong>${b}</strong> angelfish. What is the total fish count in the exhibit?`, eq: `${a} + ${b} =`, unit: "fish", ans: a + b }),
+        (a, b) => ({ stem: `A craft shop sold <strong>${a}</strong> skeins of wool yarn and <strong>${b}</strong> skeins of cotton thread. How many yarn skeins were sold in all?`, eq: `${a} + ${b} =`, unit: "skeins", ans: a + b })
       ],
       sub: [
         (a, b) => {
@@ -798,6 +823,31 @@ layout: null
           const high = Math.max(a, b) + randInt(1, 4);
           const low = Math.min(a, b);
           return { stem: `An animal shelter sheltered <strong>${high}</strong> puppies. Families adopted <strong>${low}</strong> puppies this weekend. How many puppies remain?`, eq: `${high} − ${low} =`, unit: "puppies", ans: high - low };
+        },
+        (a, b) => {
+          const high = Math.max(a, b) + randInt(1, 4);
+          const low = Math.min(a, b);
+          return { stem: `A botanical laboratory grew <strong>${high}</strong> orchid cultures. Technicians transferred <strong>${low}</strong> cultures to field soil. How many stay in lab?`, eq: `${high} − ${low} =`, unit: "cultures", ans: high - low };
+        },
+        (a, b) => {
+          const high = Math.max(a, b) + randInt(1, 4);
+          const low = Math.min(a, b);
+          return { stem: `A supply warehouse stocked <strong>${high}</strong> steel bolts. A construction team pulled <strong>${low}</strong> bolts for framing. How many bolts are left?`, eq: `${high} − ${low} =`, unit: "bolts", ans: high - low };
+        },
+        (a, b) => {
+          const high = Math.max(a, b) + randInt(1, 4);
+          const low = Math.min(a, b);
+          return { stem: `A bakery baked <strong>${high}</strong> artisan sourdough loaves. Morning shoppers purchased <strong>${low}</strong> loaves. How many loaves are unsold?`, eq: `${high} − ${low} =`, unit: "loaves", ans: high - low };
+        },
+        (a, b) => {
+          const high = Math.max(a, b) + randInt(1, 4);
+          const low = Math.min(a, b);
+          return { stem: `An art gallery received <strong>${high}</strong> clay sculptures. Judges relocated <strong>${low}</strong> sculptures to the main stage. How many remain in hall?`, eq: `${high} − ${low} =`, unit: "sculptures", ans: high - low };
+        },
+        (a, b) => {
+          const high = Math.max(a, b) + randInt(1, 4);
+          const low = Math.min(a, b);
+          return { stem: `A school greenhouse nurtured <strong>${high}</strong> tomato seedlings. Gardeners planted <strong>${low}</strong> seedlings in garden beds. How many remain?`, eq: `${high} − ${low} =`, unit: "seedlings", ans: high - low };
         }
       ]
     };
@@ -836,11 +886,11 @@ layout: null
       const masterAnswers = [];
 
       // -------------------------------------------------------------
-      // 1. GENERATE PAGE 1: 10 Contextual Problem Cards
+      // 1. GENERATE PAGE 1: 10 Contextual Problem Cards (Shuffled Order)
       // -------------------------------------------------------------
       const p1Grid = document.getElementById('p1-grid');
       p1Grid.innerHTML = '';
-      const templates = contextTemplates[op];
+      const templates = shuffleArray(contextTemplates[op]);
 
       for (let i = 1; i <= 10; i++) {
         const a = randInt(min, max);
