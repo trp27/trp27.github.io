@@ -6,7 +6,7 @@ layout: null
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Grade 3 Multiplication Mastery Worksheet</title>
+  <title>Math Worksheet Engine</title>
   <style>
     @page {
       size: letter portrait;
@@ -24,56 +24,98 @@ layout: null
       padding: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       color: #0f172a;
-      background-color: #f1f5f9;
+      background-color: #f8fafc;
     }
 
-    /* Screen-Only Control Toolbar */
-    .screen-toolbar {
-      position: sticky;
-      top: 0;
+    /* Screen-Only Parameter Control Drawer */
+    .control-panel {
       background: #0f172a;
-      padding: 10px 16px;
+      color: #f8fafc;
+      padding: 16px;
+      border-radius: 8px;
+      margin: 12px 0 20px 0;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+    }
+    .panel-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-radius: 8px;
-      margin: 12px 0 16px 0;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-      z-index: 1000;
+      margin-bottom: 12px;
+      border-bottom: 1px solid #334155;
+      padding-bottom: 8px;
     }
-    .toolbar-heading {
-      color: #f8fafc;
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 0.4px;
+    .panel-header h2 {
+      margin: 0;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
     }
-    .toolbar-actions {
+    .controls-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .control-group {
       display: flex;
-      gap: 8px;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .control-group label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #94a3b8;
+      text-transform: uppercase;
+    }
+    .control-group select, .control-group input[type="number"] {
+      background: #1e293b;
+      color: #fff;
+      border: 1px solid #475569;
+      border-radius: 4px;
+      padding: 6px 8px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 18px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .panel-actions {
+      display: flex;
+      gap: 10px;
     }
     .btn {
-      background-color: #2563eb;
-      color: #ffffff;
+      flex: 1;
       border: none;
-      padding: 7px 14px;
-      border-radius: 5px;
-      font-size: 12px;
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-size: 13px;
       font-weight: 700;
       cursor: pointer;
+      text-align: center;
+    }
+    .btn-primary {
+      background: #2563eb;
+      color: #ffffff;
     }
     .btn-secondary {
-      background-color: #334155;
+      background: #3b82f6;
+      color: #ffffff;
     }
     .btn:active {
       transform: scale(0.98);
     }
 
-    /* Print Sheet Containers */
+    /* Print Geometry & Sheets */
     .sheet {
       background: #ffffff;
       width: 7.5in;
       height: 10in;
-      margin: 0 auto 24px auto;
+      margin: 0 auto 30px auto;
       padding: 0;
       display: flex;
       flex-direction: column;
@@ -85,24 +127,24 @@ layout: null
       break-after: page;
     }
 
-    /* Shared Worksheet Header */
+    /* Worksheet Headers */
     .sheet-header {
       border-bottom: 2px solid #000;
-      padding-bottom: 5px;
-      margin-bottom: 10px;
+      padding-bottom: 6px;
+      margin-bottom: 12px;
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
     }
     .header-text h1 {
-      font-size: 17px;
+      font-size: 18px;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       margin: 0 0 2px 0;
     }
     .header-text p {
-      font-size: 10px;
+      font-size: 11px;
       color: #475569;
       margin: 0;
       font-weight: 600;
@@ -110,20 +152,15 @@ layout: null
     .header-meta {
       display: flex;
       gap: 14px;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 700;
-    }
-    .meta-item {
-      display: inline-flex;
-      align-items: flex-end;
-      gap: 4px;
     }
     .meta-line {
       border-bottom: 1.5px solid #000;
       display: inline-block;
     }
 
-    /* Page 1: 10-Item Problem Grid (2 Columns x 5 Rows) */
+    /* Page 1: Application Grid */
     .grid-p1 {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -131,7 +168,6 @@ layout: null
       gap: 10px;
       flex: 1;
       width: 100%;
-      min-width: 0;
     }
     .story-card {
       border: 1px solid #cbd5e1;
@@ -140,25 +176,17 @@ layout: null
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      min-width: 0;
-      overflow-wrap: break-word;
-      word-break: break-word;
     }
     .card-stem {
       font-size: 11px;
       line-height: 1.35;
       margin-bottom: 4px;
     }
-    .card-stem strong.idx {
-      font-size: 12px;
-      color: #0f172a;
-      margin-right: 4px;
-    }
     .card-workspace {
       border: 1px dashed #cbd5e1;
       border-radius: 3px;
       flex-grow: 1;
-      min-height: 68px;
+      min-height: 64px;
       background: #fafafa;
     }
     .card-equation-bar {
@@ -175,7 +203,7 @@ layout: null
       height: 14px;
     }
 
-    /* Page 2: High-Density Tiered Fluency */
+    /* Page 2: High-Density Fluency */
     .tier-block {
       margin-bottom: 8px;
     }
@@ -189,20 +217,17 @@ layout: null
       padding-bottom: 2px;
       margin-bottom: 6px;
     }
-
-    /* Tier 1: 24 Vertical Algorithms (4 Columns x 6 Rows) */
     .grid-tier-1 {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
       row-gap: 6px;
       column-gap: 20px;
-      width: 100%;
     }
     .v-prob {
       display: flex;
       align-items: flex-start;
       gap: 8px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
       font-size: 13px;
       font-weight: 700;
     }
@@ -218,9 +243,6 @@ layout: null
       align-items: flex-end;
       width: 44px;
     }
-    .v-row {
-      line-height: 1.15;
-    }
     .v-op-row {
       display: flex;
       justify-content: space-between;
@@ -233,13 +255,11 @@ layout: null
       height: 16px;
     }
 
-    /* Tier 2: 20 Missing Factor Equations (4 Columns x 5 Rows) */
     .grid-tier-2 {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
       row-gap: 5px;
       column-gap: 12px;
-      width: 100%;
     }
     .alg-prob {
       display: flex;
@@ -247,7 +267,7 @@ layout: null
       gap: 4px;
       font-size: 11.5px;
       font-weight: 700;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
     }
     .alg-box {
       border: 1.5px solid #334155;
@@ -257,13 +277,11 @@ layout: null
       border-radius: 2px;
     }
 
-    /* Tier 3: 20 Comparison Problems (4 Columns x 5 Rows) */
     .grid-tier-3 {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
       row-gap: 5px;
       column-gap: 12px;
-      width: 100%;
     }
     .cmp-prob {
       display: flex;
@@ -273,7 +291,7 @@ layout: null
       font-weight: 700;
       padding: 0 4px;
       border-bottom: 1px dotted #cbd5e1;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
     }
     .cmp-circle {
       border: 1px solid #64748b;
@@ -283,12 +301,27 @@ layout: null
       display: inline-flex;
     }
 
-    /* Print Overrides */
+    /* Page 3: Key Layout */
+    .key-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px 16px;
+      font-size: 11px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+    }
+    .key-entry {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 3px 0;
+    }
+
+    /* Print Suppression */
     @media print {
       body {
         background: transparent;
       }
-      .screen-toolbar {
+      .control-panel {
         display: none !important;
       }
       .sheet {
@@ -302,266 +335,266 @@ layout: null
 </head>
 <body>
 
-  <aside class="screen-toolbar">
-    <div class="toolbar-heading">Grade 3 Operations & Algebraic Thinking Generator</div>
-    <div class="toolbar-actions">
-      <button class="btn btn-secondary" onclick="generateAllSets()">Randomize Problems</button>
-      <button class="btn" onclick="window.print()">Print / Export PDF</button>
+  <!-- INPUT SELECTION DRAWER -->
+  <aside class="control-panel">
+    <div class="panel-header">
+      <h2>Worksheet Parameter Intake</h2>
+      <span style="font-size: 11px; color: #94a3b8;">iOS Local Print Engine</span>
+    </div>
+    
+    <div class="controls-grid">
+      <div class="control-group">
+        <label for="op-select">Operation</label>
+        <select id="op-select">
+          <option value="mult" selected>Multiplication (×)</option>
+          <option value="div">Division (÷)</option>
+          <option value="add">Addition (+)</option>
+          <option value="sub">Subtraction (−)</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <label for="min-val">Min Operand</label>
+        <input type="number" id="min-val" value="2" min="1" max="99">
+      </div>
+
+      <div class="control-group">
+        <label for="max-val">Max Operand</label>
+        <input type="number" id="max-val" value="9" min="2" max="99">
+      </div>
+
+      <div class="control-group">
+        <label for="grade-select">Grade Standard</label>
+        <select id="grade-select">
+          <option value="Grade 2">Grade 2</option>
+          <option value="Grade 3" selected>Grade 3 (3.OA)</option>
+          <option value="Grade 4">Grade 4 (4.OA / 4.NBT)</option>
+          <option value="Grade 5">Grade 5</option>
+        </select>
+      </div>
+
+      <div class="checkbox-group">
+        <input type="checkbox" id="include-key">
+        <label for="include-key" style="color: #f8fafc; font-size: 12px; text-transform:none;">Include Answer Key</label>
+      </div>
+    </div>
+
+    <div class="panel-actions">
+      <button class="btn btn-primary" onclick="buildWorksheet()">Regenerate Sheet</button>
+      <button class="btn btn-secondary" onclick="window.print()">Export / Print PDF</button>
     </div>
   </aside>
 
-  <!-- PAGE 1: 10 Application Story Workspaces -->
+  <!-- PAGE 1: APPLICATION WORKSPACES -->
   <section class="sheet page-break">
     <header class="sheet-header">
       <div class="header-text">
-        <h1>Multiplication Application</h1>
-        <p>CCSS.MATH.CONTENT.3.OA.A.3 • Contextual Word Problems & Array Models</p>
+        <h1 id="p1-title">Multiplication Application</h1>
+        <p id="p1-subtitle">CCSS.MATH.CONTENT.3.OA.A.3 • Contextual Word Problems</p>
       </div>
       <div class="header-meta">
-        <div class="meta-item">Name: <span class="meta-line" style="width: 100px;"></span></div>
-        <div class="meta-item">Date: <span class="meta-line" style="width: 75px;"></span></div>
+        <div>Name: <span class="meta-line" style="width: 110px;"></span></div>
+        <div>Date: <span class="meta-line" style="width: 75px;"></span></div>
       </div>
     </header>
-
-    <main class="grid-p1" id="p1-container">
-      <article class="story-card">
-        <div class="card-stem"><strong class="idx">1.</strong>A farmers market vendor sets out <strong>4</strong> wooden crates. Each crate holds exactly <strong>6</strong> cantaloupes. How many total cantaloupes are displayed?</div>
-        <div class="card-workspace"></div>
-        <div class="card-equation-bar"><span>Equation: 4 × 6 =</span><div class="answer-line"></div><span>cantaloupes</span></div>
-      </article>
-
-      <article class="story-card">
-        <div class="card-stem"><strong class="idx">2.</strong>The science lab organizes microscopes across <strong>7</strong> workbenches. Each workbench holds <strong>8</strong> glass slide kits. How many kits are in the lab?</div>
-        <div class="card-workspace"></div>
-        <div class="card-equation-bar"><span>Equation: 7 × 8 =</span><div class="answer-line"></div><span>kits</span></div>
-      </article>
-
-      <article class="story-card">
-        <div class="card-stem"><strong class="idx">3.</strong>An arborist plants <strong>5</strong> rows of sapling pine trees in a grove. There are <strong>9</strong> saplings in every row. How many pine trees were planted?</div>
-        <div class="card-workspace"></div>
-        <div class="card-equation-bar"><span>Equation: 5 × 9 =</span><div class="answer-line"></div><span>trees</span></div>
-      </article>
-
-      <article class="story-card">
-        <div class="card-stem"><strong class="idx">4.</strong>A bakery packs artisan rolls into <strong>6</strong> specialty boxes. Each box holds <strong>7</strong> seeded rolls. How many seeded rolls did the bakery pack?</div>
-        <div class="card-workspace"></div>
-        <div class="card-equation-bar"><span>Equation: 6 × 7 =</span><div class="answer-line"></div><span>rolls</span></div>
-      </article>
-
-      <article class="story-card">
-        <div class="card-stem"><strong class="idx">5.</strong>During art class, students fill <strong>3</strong> supply carts. Each cart contains <strong>8</strong> jars of ceramic glaze. What is the total number of glaze jars?</div>
-        <div class="card-workspace"></div>
-        <div class="card-equation-bar"><span>Equation: 3 × 8 =</span><div class="answer-line"></div><span>jars</span></div>
-      </article>
-
-      <article class="story-card">
-        <div class="card-stem"><strong class="idx">6.</strong>A swimming facility purchases <strong>9</strong> equipment mesh bags. Each mesh bag holds <strong>4</strong> kickboards. How many kickboards were purchased in total?</div>
-        <div class="card-workspace"></div>
-        <div class="card-equation-bar"><span>Equation: 9 × 4 =</span><div class="answer-line"></div><span>kickboards</span></div>
-      </article>
-
-      <article class="story-card">
-        <div class="card-stem"><strong class="idx">7.</strong>A botanical garden displays rare cacti in <strong>8</strong> matching planters. Each planter holds <strong>4</strong> individual cacti. How many cacti are on display?</div>
-        <div class="card-workspace"></div>
-        <div class="card-equation-bar"><span>Equation: 8 × 4 =</span><div class="answer-line"></div><span>cacti</span></div>
-      </article>
-
-      <article class="story-card">
-        <div class="card-stem"><strong class="idx">8.</strong>An endurance athlete completes <strong>6</strong> trail laps each training session. How many total laps will the athlete record over <strong>9</strong> training sessions?</div>
-        <div class="card-workspace"></div>
-        <div class="card-equation-bar"><span>Equation: 6 × 9 =</span><div class="answer-line"></div><span>laps</span></div>
-      </article>
-
-      <article class="story-card">
-        <div class="card-stem"><strong class="idx">9.</strong>A robotics tournament sets up <strong>8</strong> competition arenas. Each arena features <strong>8</strong> beacon markers. How many total markers are placed?</div>
-        <div class="card-workspace"></div>
-        <div class="card-equation-bar"><span>Equation: 8 × 8 =</span><div class="answer-line"></div><span>markers</span></div>
-      </article>
-
-      <article class="story-card">
-        <div class="card-stem"><strong class="idx">10.</strong>A logistics hub stacks pallets into <strong>7</strong> storage bays. Each storage bay contains <strong>5</strong> industrial containers. How many containers are in the bays?</div>
-        <div class="card-workspace"></div>
-        <div class="card-equation-bar"><span>Equation: 7 × 5 =</span><div class="answer-line"></div><span>containers</span></div>
-      </article>
-    </main>
+    <main class="grid-p1" id="p1-grid"></main>
   </section>
 
-  <!-- PAGE 2: 64-Item Tiered Fact Fluency -->
-  <section class="sheet">
+  <!-- PAGE 2: HIGH-DENSITY TIERED FLUENCY -->
+  <section class="sheet" id="sheet-p2">
     <header class="sheet-header">
       <div class="header-text">
-        <h1>Multiplication Fact Fluency</h1>
-        <p>CCSS.MATH.CONTENT.3.OA.C.7 • Mental Calculations & Fluency Within 100</p>
+        <h1 id="p2-title">Fact Fluency Mastery</h1>
+        <p id="p2-subtitle">CCSS.MATH.CONTENT.3.OA.C.7 • Fluency Within Bounds</p>
       </div>
       <div class="header-meta">
-        <div class="meta-item">Score: <span class="meta-line" style="width: 45px;"></span> / 64</div>
-        <div class="meta-item">Time: <span class="meta-line" style="width: 50px;"></span></div>
+        <div>Score: <span class="meta-line" style="width: 45px;"></span> / 64</div>
+        <div>Time: <span class="meta-line" style="width: 50px;"></span></div>
       </div>
     </header>
 
-    <!-- Tier 1: 24 Stacked Items -->
     <div class="tier-block">
-      <div class="tier-title">Tier 1: Vertical Algorithms (24 Facts)</div>
-      <div class="grid-tier-1" id="t1-container">
-        <div class="v-prob"><span class="v-num">1.</span><div class="v-calc"><div class="v-row">4</div><div class="v-op-row"><span>×</span><span>3</span></div><div class="v-blank"></div></div></div>
-        <div class="v-prob"><span class="v-num">2.</span><div class="v-calc"><div class="v-row">7</div><div class="v-op-row"><span>×</span><span>5</span></div><div class="v-blank"></div></div></div>
-        <div class="v-prob"><span class="v-num">3.</span><div class="v-calc"><div class="v-row">8</div><div class="v-op-row"><span>×</span><span>2</span></div><div class="v-blank"></div></div></div>
-        <div class="v-prob"><span class="v-num">4.</span><div class="v-calc"><div class="v-row">6</div><div class="v-op-row"><span>×</span><span>6</span></div><div class="v-blank"></div></div></div>
-        <div class="v-prob"><span class="v-num">5.</span><div class="v-calc"><div class="v-row">9</div><div class="v-op-row"><span>×</span><span>4</span></div><div class="v-blank"></div></div></div>
-        <div class="v-prob"><span class="v-num">6.</span><div class="v-calc"><div class="v-row">3</div><div class="v-op-row"><span>×</span><span>7</span></div><div class="v-blank"></div></div></div>
-        <div class="v-prob"><span class="v-num">7.</span><div class="v-calc"><div class="v-row">5</div><div class="v-op-row"><span>×</span><span>8</span></div><div class="v-blank"></div></div></div>
-        <div class="v-prob"><span class="v-num">8.</span><div class="v-calc"><div class="v-row">8</div><div class="v-op-row"><span>×</span><span>9</span></div><div class="v-blank"></div></div></div>
-        <div class="v-prob"><span class="v-num">9.</span><div class="v-calc"><div class="v-row">2</div><div class="v-op-row"><span>×</span><span>6</span></div><div class="v-blank"></div></div></div>
-        <div class="v-prob"><span class="v-num">10.</span><div class="v-calc"><div class="v-row">9</div><div class="v-op-row"><span>×</span><span>7</span></div><div class="v-blank"></div></div></div>
-        <div class="v-prob"><span class="v-num">11.</span><div class="v-calc"><div class="v-row">4</div><div class="v-op-row"><span>×</span><span>8</span></div><div class="v-blank"></div></div></div>
-        <div class="v-prob"><span class="v-num">12.</span><div class="v-calc"><div class="v-row">6</div><div class="v-op-row"><span>×</span><span>5</span></div><div class="v-blank"></div></div></div>
-        <div class="v-prob"><span class="v-num">13.</span><div class="v-calc"><div class="v-row">7</div><div class="v-op-row"><span>×</span><span>7</span></div><div class="v-blank"></div></div></div>
-        <div class="v-prob"><span class="v-num">14.</span><div class="v-calc"><div class="v-row">3</div><div class="v-op-row"><span>×</span><span>9</span></div><div class="v-blank"></div></div></div>
-        <div class="v-prob"><span class="v-num">15.</span><div class="v-calc"><div class="v-row">8</div><div class="v-op-row"><span>×</span><span>6</span></div><div class="v-blank"></div></div></div>
-        <div class="v-prob"><span class="v-num">16.</span><div class="v-calc"><div class="v-row">5</div><div class="v-op-row"><span>×</span><span>4</span></div><div class="v-blank"></div></div></div>
-        <div class="v-prob"><span class="v-num">17.</span><div class="v-calc"><div class="v-row">9</div><div class="v-op-row"><span>×</span><span>9</span></div><div class="v-blank"></div></div></div>
-        <div class="v-prob"><span class="v-num">18.</span><div class="v-calc"><div class="v-row">6</div><div class="v-op-row"><span>×</span><span>3</span></div><div class="v-blank"></div></div></div>
-        <div class="v-prob"><span class="v-num">19.</span><div class="v-calc"><div class="v-row">4</div><div class="v-op-row"><span>×</span><span>7</span></div><div class="v-blank"></div></div></div>
-        <div class="v-prob"><span class="v-num">20.</span><div class="v-calc"><div class="v-row">8</div><div class="v-op-row"><span>×</span><span>8</span></div><div class="v-blank"></div></div></div>
-        <div class="v-prob"><span class="v-num">21.</span><div class="v-calc"><div class="v-row">7</div><div class="v-op-row"><span>×</span><span>2</span></div><div class="v-blank"></div></div></div>
-        <div class="v-prob"><span class="v-num">22.</span><div class="v-calc"><div class="v-row">5</div><div class="v-op-row"><span>×</span><span>6</span></div><div class="v-blank"></div></div></div>
-        <div class="v-prob"><span class="v-num">23.</span><div class="v-calc"><div class="v-row">9</div><div class="v-op-row"><span>×</span><span>5</span></div><div class="v-blank"></div></div></div>
-        <div class="v-prob"><span class="v-num">24.</span><div class="v-calc"><div class="v-row">6</div><div class="v-op-row"><span>×</span><span>8</span></div><div class="v-blank"></div></div></div>
-      </div>
+      <div class="tier-title">Tier 1: Vertical Rapid Algorithms (24 Facts)</div>
+      <div class="grid-tier-1" id="t1-grid"></div>
     </div>
 
-    <!-- Tier 2: 20 Missing Factor Items -->
     <div class="tier-block">
       <div class="tier-title">Tier 2: Missing Factor Reasoning (20 Facts)</div>
-      <div class="grid-tier-2" id="t2-container">
-        <div class="alg-prob"><span style="color:#64748b; font-size:9.5px;">25.</span> 4 × <span class="alg-box"></span> = 28</div>
-        <div class="alg-prob"><span style="color:#64748b; font-size:9.5px;">26.</span> <span class="alg-box"></span> × 6 = 54</div>
-        <div class="alg-prob"><span style="color:#64748b; font-size:9.5px;">27.</span> 8 × <span class="alg-box"></span> = 24</div>
-        <div class="alg-prob"><span style="color:#64748b; font-size:9.5px;">28.</span> <span class="alg-box"></span> × 7 = 35</div>
-        <div class="alg-prob"><span style="color:#64748b; font-size:9.5px;">29.</span> 9 × <span class="alg-box"></span> = 72</div>
-        <div class="alg-prob"><span style="color:#64748b; font-size:9.5px;">30.</span> <span class="alg-box"></span> × 3 = 18</div>
-        <div class="alg-prob"><span style="color:#64748b; font-size:9.5px;">31.</span> 5 × <span class="alg-box"></span> = 45</div>
-        <div class="alg-prob"><span style="color:#64748b; font-size:9.5px;">32.</span> <span class="alg-box"></span> × 8 = 32</div>
-        <div class="alg-prob"><span style="color:#64748b; font-size:9.5px;">33.</span> 7 × <span class="alg-box"></span> = 42</div>
-        <div class="alg-prob"><span style="color:#64748b; font-size:9.5px;">34.</span> <span class="alg-box"></span> × 9 = 81</div>
-        <div class="alg-prob"><span style="color:#64748b; font-size:9.5px;">35.</span> 6 × <span class="alg-box"></span> = 48</div>
-        <div class="alg-prob"><span style="color:#64748b; font-size:9.5px;">36.</span> <span class="alg-box"></span> × 4 = 16</div>
-        <div class="alg-prob"><span style="color:#64748b; font-size:9.5px;">37.</span> 8 × <span class="alg-box"></span> = 56</div>
-        <div class="alg-prob"><span style="color:#64748b; font-size:9.5px;">38.</span> <span class="alg-box"></span> × 5 = 25</div>
-        <div class="alg-prob"><span style="color:#64748b; font-size:9.5px;">39.</span> 3 × <span class="alg-box"></span> = 27</div>
-        <div class="alg-prob"><span style="color:#64748b; font-size:9.5px;">40.</span> <span class="alg-box"></span> × 6 = 36</div>
-        <div class="alg-prob"><span style="color:#64748b; font-size:9.5px;">41.</span> 7 × <span class="alg-box"></span> = 63</div>
-        <div class="alg-prob"><span style="color:#64748b; font-size:9.5px;">42.</span> <span class="alg-box"></span> × 2 = 18</div>
-        <div class="alg-prob"><span style="color:#64748b; font-size:9.5px;">43.</span> 9 × <span class="alg-box"></span> = 36</div>
-        <div class="alg-prob"><span style="color:#64748b; font-size:9.5px;">44.</span> <span class="alg-box"></span> × 7 = 49</div>
-      </div>
+      <div class="grid-tier-2" id="t2-grid"></div>
     </div>
 
-    <!-- Tier 3: 20 Inequality Comparison Items -->
     <div class="tier-block">
-      <div class="tier-title">Tier 3: Comparisons (&lt;, &gt;, =) (20 Facts)</div>
-      <div class="grid-tier-3" id="t3-container">
-        <div class="cmp-prob"><span>4 × 6</span><span class="cmp-circle"></span><span>5 × 5</span></div>
-        <div class="cmp-prob"><span>7 × 3</span><span class="cmp-circle"></span><span>2 × 9</span></div>
-        <div class="cmp-prob"><span>8 × 4</span><span class="cmp-circle"></span><span>6 × 6</span></div>
-        <div class="cmp-prob"><span>9 × 2</span><span class="cmp-circle"></span><span>3 × 6</span></div>
-        <div class="cmp-prob"><span>5 × 8</span><span class="cmp-circle"></span><span>7 × 6</span></div>
-        <div class="cmp-prob"><span>6 × 4</span><span class="cmp-circle"></span><span>3 × 8</span></div>
-        <div class="cmp-prob"><span>9 × 5</span><span class="cmp-circle"></span><span>8 × 6</span></div>
-        <div class="cmp-prob"><span>7 × 7</span><span class="cmp-circle"></span><span>8 × 6</span></div>
-        <div class="cmp-prob"><span>4 × 9</span><span class="cmp-circle"></span><span>6 × 6</span></div>
-        <div class="cmp-prob"><span>8 × 8</span><span class="cmp-circle"></span><span>9 × 7</span></div>
-        <div class="cmp-prob"><span>3 × 9</span><span class="cmp-circle"></span><span>4 × 7</span></div>
-        <div class="cmp-prob"><span>6 × 7</span><span class="cmp-circle"></span><span>5 × 9</span></div>
-        <div class="cmp-prob"><span>9 × 9</span><span class="cmp-circle"></span><span>8 × 9</span></div>
-        <div class="cmp-prob"><span>5 × 6</span><span class="cmp-circle"></span><span>4 × 8</span></div>
-        <div class="cmp-prob"><span>7 × 4</span><span class="cmp-circle"></span><span>3 × 9</span></div>
-        <div class="cmp-prob"><span>8 × 3</span><span class="cmp-circle"></span><span>4 × 6</span></div>
-        <div class="cmp-prob"><span>9 × 6</span><span class="cmp-circle"></span><span>7 × 8</span></div>
-        <div class="cmp-prob"><span>6 × 8</span><span class="cmp-circle"></span><span>7 × 7</span></div>
-        <div class="cmp-prob"><span>5 × 7</span><span class="cmp-circle"></span><span>6 × 6</span></div>
-        <div class="cmp-prob"><span>8 × 5</span><span class="cmp-circle"></span><span>4 × 9</span></div>
-      </div>
+      <div class="tier-title">Tier 3: Inequality & Product Comparisons (20 Facts)</div>
+      <div class="grid-tier-3" id="t3-grid"></div>
     </div>
+  </section>
+
+  <!-- OPTIONAL PAGE 3: INSTRUCTOR KEY -->
+  <section class="sheet" id="sheet-key" style="display: none;">
+    <header class="sheet-header">
+      <div class="header-text">
+        <h1>Instructor Answer Key</h1>
+        <p>Complete Evaluation Matrix</p>
+      </div>
+      <div class="header-meta">
+        <div>Total Items: 74</div>
+      </div>
+    </header>
+    <main class="key-grid" id="key-grid"></main>
   </section>
 
   <script>
     const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
-    const storyScenarios = [
-      (a, b) => ({ text: `A warehouse worker stacks storage crates into <strong>${a}</strong> distinct columns. Each column contains exactly <strong>${b}</strong> bins. How many bins are stacked?`, units: "bins", eq: `${a} × ${b} =` }),
-      (a, b) => ({ text: `An art studio arranges <strong>${a}</strong> craft tables for a pottery workshop. Each table holds <strong>${b}</strong> clay blocks. How many blocks are ready?`, units: "blocks", eq: `${a} × ${b} =` }),
-      (a, b) => ({ text: `A market stall displays <strong>${a}</strong> woven baskets. Each basket contains <strong>${b}</strong> organic melons. What is the total melon count?`, units: "melons", eq: `${a} × ${b} =` }),
-      (a, b) => ({ text: `A coach organizes runners into <strong>${a}</strong> equal training squads. Each squad has <strong>${b}</strong> athletes. How many athletes are running?`, units: "athletes", eq: `${a} × ${b} =` }),
-      (a, b) => ({ text: `A greenhouse organizes orchids onto <strong>${a}</strong> metal shelves. Every shelf supports <strong>${b}</strong> potted plants. How many pots total?`, units: "pots", eq: `${a} × ${b} =` })
-    ];
+    function buildWorksheet() {
+      const op = document.getElementById('op-select').value;
+      const min = parseInt(document.getElementById('min-val').value, 10);
+      const max = parseInt(document.getElementById('max-val').value, 10);
+      const grade = document.getElementById('grade-select').value;
+      const includeKey = document.getElementById('include-key').checked;
 
-    function generateAllSets() {
-      // Re-randomize Page 1: 10 Story Problems
-      const p1 = document.getElementById('p1-container');
+      const keyContainer = document.getElementById('sheet-key');
+      const sheetP2 = document.getElementById('sheet-p2');
+
+      if (includeKey) {
+        keyContainer.style.display = 'flex';
+        sheetP2.classList.add('page-break');
+      } else {
+        keyContainer.style.display = 'none';
+        sheetP2.classList.remove('page-break');
+      }
+
+      const symMap = { mult: '×', div: '÷', add: '+', sub: '−' };
+      const sym = symMap[op];
+      const answers = [];
+
+      // Update titles
+      document.getElementById('p1-title').innerText = `${grade} ${op.toUpperCase()} Application`;
+      document.getElementById('p2-title').innerText = `${grade} ${op.toUpperCase()} Fact Fluency`;
+
+      // PAGE 1: 10 Story Problems
+      const p1 = document.getElementById('p1-grid');
       p1.innerHTML = '';
       for (let i = 1; i <= 10; i++) {
-        const a = rand(2, 9);
-        const b = rand(2, 9);
-        const item = storyScenarios[i % storyScenarios.length](a, b);
+        let a = rand(min, max);
+        let b = rand(min, max);
+        let target, text, unit = "items";
+
+        if (op === 'mult') {
+          target = a * b;
+          text = `A logistics facility packs goods across <strong>${a}</strong> matching compartments. Each compartment contains <strong>${b}</strong> parts. How many parts are packed?`;
+          unit = "parts";
+        } else if (op === 'div') {
+          target = a;
+          const total = a * b;
+          text = `A team distributes <strong>${total}</strong> seedlings equally into <strong>${b}</strong> garden beds. How many seedlings are placed in each bed?`;
+          a = total;
+          unit = "seedlings";
+        } else if (op === 'add') {
+          target = a + b;
+          text = `A research team cataloged <strong>${a}</strong> samples on Monday and <strong>${b}</strong> samples on Tuesday. What is the total count of samples?`;
+          unit = "samples";
+        } else {
+          if (a < b) [a, b] = [b, a];
+          target = a - b;
+          text = `A warehouse held <strong>${a}</strong> crates. Field operators dispatched <strong>${b}</strong> crates this morning. How many crates remain?`;
+          unit = "crates";
+        }
+
+        answers.push(`P1 #${i}: ${a} ${sym} ${b} = ${target}`);
         p1.innerHTML += `
           <article class="story-card">
-            <div class="card-stem"><strong class="idx">${i}.</strong>${item.text}</div>
+            <div class="card-stem"><strong style="font-size:12px; margin-right:4px;">${i}.</strong>${text}</div>
             <div class="card-workspace"></div>
-            <div class="card-equation-bar"><span>Equation: ${item.eq}</span><div class="answer-line"></div><span>${item.units}</span></div>
+            <div class="card-equation-bar"><span>Equation: ${a} ${sym} ${b} =</span><div class="answer-line"></div><span>${unit}</span></div>
           </article>
         `;
       }
 
-      // Re-randomize Page 2 Tier 1: 24 Vertical Algorithms
-      const t1 = document.getElementById('t1-container');
+      // PAGE 2 TIER 1: 24 Vertical Algorithms
+      const t1 = document.getElementById('t1-grid');
       t1.innerHTML = '';
       for (let i = 1; i <= 24; i++) {
-        const a = rand(2, 9);
-        const b = rand(2, 9);
+        let a = rand(min, max);
+        let b = rand(min, max);
+        let ans;
+        if (op === 'mult') ans = a * b;
+        else if (op === 'div') { ans = a; a = a * b; }
+        else if (op === 'add') ans = a + b;
+        else { if (a < b) [a, b] = [b, a]; ans = a - b; }
+
+        answers.push(`T1 #${i}: ${ans}`);
         t1.innerHTML += `
           <div class="v-prob">
             <span class="v-num">${i}.</span>
             <div class="v-calc">
-              <div class="v-row">${a}</div>
-              <div class="v-op-row"><span>×</span><span>${b}</span></div>
+              <div>${a}</div>
+              <div class="v-op-row"><span>${sym}</span><span>${b}</span></div>
               <div class="v-blank"></div>
             </div>
           </div>
         `;
       }
 
-      // Re-randomize Page 2 Tier 2: 20 Missing Factor Items
-      const t2 = document.getElementById('t2-container');
+      // PAGE 2 TIER 2: 20 Missing Factor/Term Equations
+      const t2 = document.getElementById('t2-grid');
       t2.innerHTML = '';
       for (let i = 25; i <= 44; i++) {
-        const a = rand(2, 9);
-        const b = rand(2, 9);
-        const prod = a * b;
-        const missingFirst = Math.random() > 0.5;
-        t2.innerHTML += `
-          <div class="alg-prob">
-            <span style="color:#64748b; font-size:9.5px;">${i}.</span>
-            ${missingFirst ? `<span class="alg-box"></span> × ${b} =${prod}` : `${a} × <span class="alg-box"></span> = ${prod}`}
+        let a = rand(min, max);
+        let b = rand(min, max);
+        let eqStr = "";
+
+        if (op === 'mult') {
+          const res = a * b;
+          answers.push(`T2 #${i}: ${b}`);
+          eqStr = `${a} × <span class="alg-box"></span> = ${res}`;
+        } else if (op === 'add') {
+          const res = a + b;
+          answers.push(`T2 #${i}: ${b}`);
+          eqStr = `${a} + <span class="alg-box"></span> = ${res}`;
+        } else if (op === 'sub') {
+          if (a < b) [a, b] = [b, a];
+          const res = a - b;
+          answers.push(`T2 #${i}: ${b}`);
+          eqStr = `${a} − <span class="alg-box"></span> = ${res}`;
+        } else {
+          const total = a * b;
+          answers.push(`T2 #${i}: ${b}`);
+          eqStr = `${total} ÷ <span class="alg-box"></span> = ${a}`;
+        }
+
+        t2.innerHTML += `<div class="alg-prob"><span style="color:#64748b; font-size:9.5px;">${i}.</span> ${eqStr}</div>`;
+      }
+
+      // PAGE 2 TIER 3: 20 Comparisons
+      const t3 = document.getElementById('t3-grid');
+      t3.innerHTML = '';
+      for (let i = 45; i <= 64; i++) {
+        let a1 = rand(min, max), b1 = rand(min, max);
+        let a2 = rand(min, max), b2 = rand(min, max);
+        let v1 = (op === 'mult') ? a1 * b1 : a1 + b1;
+        let v2 = (op === 'mult') ? a2 * b2 : a2 + b2;
+        let cmpSym = v1 > v2 ? '>' : (v1 < v2 ? '<' : '=');
+
+        answers.push(`T3 #${i}: ${cmpSym}`);
+        t3.innerHTML += `
+          <div class="cmp-prob">
+            <span>${a1}${sym}${b1}</span>
+            <span class="cmp-circle"></span>
+            <span>${a2}${sym}${b2}</span>
           </div>
         `;
       }
 
-      // Re-randomize Page 2 Tier 3: 20 Comparison Items
-      const t3 = document.getElementById('t3-container');
-      t3.innerHTML = '';
-      for (let i = 45; i <= 64; i++) {
-        const a1 = rand(2, 9), b1 = rand(2, 9);
-        const a2 = rand(2, 9), b2 = rand(2, 9);
-        t3.innerHTML += `
-          <div class="cmp-prob">
-            <span>${a1} × ${b1}</span>
-            <span class="cmp-circle"></span>
-            <span>${a2} × ${b2}</span>
-          </div>
-        `;
+      // PAGE 3: Key Injection
+      if (includeKey) {
+        const keyGrid = document.getElementById('key-grid');
+        keyGrid.innerHTML = answers.map(ans => `<div class="key-entry">${ans}</div>`).join('');
       }
     }
+
+    // Build default Grade 3 sheet on first load
+    window.onload = buildWorksheet;
   </script>
 </body>
 </html>
